@@ -1,7 +1,3 @@
-/*
- * AMF Configuration Factory
- */
-
 package factory
 
 import (
@@ -13,6 +9,8 @@ import (
 	"free5gc/src/amf/logger"
 )
 
+// AmfConfig is the package global variable containing the translation
+// of a YAML configuration file contents into go structs
 var AmfConfig Config
 
 func checkErr(err error) {
@@ -22,7 +20,9 @@ func checkErr(err error) {
 	}
 }
 
-// TODO: Support configuration update from REST api
+// InitConfigFactory takes the name of an AMF configuration YAML file.
+// It attempts to process it into the package global AmfConfig variable.
+// If an error occurs, a Fatal logger event is raised.
 func InitConfigFactory(f string) {
 	content, err := ioutil.ReadFile(f)
 	checkErr(err)

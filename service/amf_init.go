@@ -71,11 +71,11 @@ func (*AMF) GetCliCmd() (flags []cli.Flag) {
 // this AMF instance object.  It configures logging, including the logging level
 // (default is Info)
 func (*AMF) Initialize(c *cli.Context) {
-
 	config = Config{
 		amfcfg: c.String("amfcfg"),
 	}
 
+	// XXX: here
 	if config.amfcfg != "" {
 		factory.InitConfigFactory(config.amfcfg)
 	} else {

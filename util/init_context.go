@@ -21,8 +21,8 @@ func InitAmfContext(context *context.AMFContext) {
 	if configuration.AmfName != "" {
 		context.Name = configuration.AmfName
 	}
-	if configuration.NgapIpList != nil {
-		context.NgapIpList = configuration.NgapIpList
+	if configuration.NgapIPList != nil {
+		context.NgapIpList = configuration.NgapIPList
 	} else {
 		context.NgapIpList = []string{"127.0.0.1"} // default localhost
 	}
@@ -62,8 +62,8 @@ func InitAmfContext(context *context.AMFContext) {
 	}
 	context.PlmnSupportList = configuration.PlmnSupportList
 	context.SupportDnnLists = configuration.SupportDnnList
-	if configuration.NrfUri != "" {
-		context.NrfUri = configuration.NrfUri
+	if configuration.NrfURI != "" {
+		context.NrfUri = configuration.NrfURI
 	} else {
 		logger.UtilLog.Warn("NRF Uri is empty! Using localhost as NRF IPv4 address.")
 		context.NrfUri = fmt.Sprintf("%s://%s:%d", context.UriScheme, "127.0.0.1", 29510)
