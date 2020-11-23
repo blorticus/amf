@@ -35,14 +35,13 @@ import (
 	"free5gc/src/app"
 )
 
+// AMF represents a running AMF instance
 type AMF struct{}
 
-type (
-	// Config information.
-	Config struct {
-		amfcfg string
-	}
-)
+// Config contains configuration information for an AMF instance
+type Config struct {
+	amfcfg string
+}
 
 var config Config
 
@@ -63,10 +62,14 @@ func init() {
 	initLog = logger.InitLog
 }
 
+// GetCliCmd returns the set of command-line arguments for the AMF application
 func (*AMF) GetCliCmd() (flags []cli.Flag) {
 	return amfCLi
 }
 
+// Initialize consumes application command-line arguments, using them to configure
+// this AMF instance object.  It configures logging, including the logging level
+// (default is Info)
 func (*AMF) Initialize(c *cli.Context) {
 
 	config = Config{
@@ -98,6 +101,9 @@ func (*AMF) Initialize(c *cli.Context) {
 
 }
 
+// FilterCli takes a urfave.cli Context object and converts it back into a string
+// list of arguments, where each element is "--arg value".  Any argument without
+// a value is not populated into the return list.
 func (amf *AMF) FilterCli(c *cli.Context) (args []string) {
 	for _, flag := range amf.GetCliCmd() {
 		name := flag.GetName()
@@ -111,6 +117,8 @@ func (amf *AMF) FilterCli(c *cli.Context) (args []string) {
 	return args
 }
 
+// Start initiates the AMF instance HTTP API listener.  It also sets up a signal
+// handler, invoking a clean shutdown if the TERM signal is received.
 func (amf *AMF) Start() {
 	initLog.Infoln("Server started")
 
@@ -155,10 +163,10 @@ func (amf *AMF) Start() {
 		profile = profileTmp
 	}
 
-	if _, nfId, err := consumer.SendRegisterNFInstance(self.NrfUri, self.NfId, profile); err != nil {
+	if _, nfID, err := consumer.SendRegisterNFInstance(self.NrfUri, self.NfId, profile); err != nil {
 		initLog.Warnf("Send Register NF Instance failed: %+v", err)
 	} else {
-		self.NfId = nfId
+		self.NfId = nfID
 	}
 
 	signalChannel := make(chan os.Signal, 1)
@@ -192,6 +200,7 @@ func (amf *AMF) Start() {
 	}
 }
 
+// Exec daemonizes a running AMF process
 func (amf *AMF) Exec(c *cli.Context) error {
 
 	//AMF.Initialize(cfgPath, c)
@@ -239,7 +248,8 @@ func (amf *AMF) Exec(c *cli.Context) error {
 	return err
 }
 
-// Used in AMF planned removal procedure
+// Terminate stops a running AMF instance cleanly.  It communicates with the registered
+// NRF, invoking the standard removal procedure.
 func (amf *AMF) Terminate() {
 	logger.InitLog.Infof("Terminating AMF...")
 	amfSelf := context.AMF_Self()

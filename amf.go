@@ -11,6 +11,7 @@ import (
 	"github.com/urfave/cli"
 )
 
+// AMF is the AMF service instance
 var AMF = &service.AMF{}
 
 var appLog *logrus.Entry
